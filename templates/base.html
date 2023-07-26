@@ -39,20 +39,20 @@
               href="{% url 'list' %}"
               class="nav-item nav-link"
               style="color: white"
-              >BLOGS</a
+              >Publicaiones</a
             >
             <a
               href="{% url 'about' %}"
               class="nav-item nav-link"
               style="color: white"
-              >About</a
+              >Acerca de</a
             >
             {% if user.is_authenticated %}
             <a
               href="{% url 'add' %}"
               class="nav-item nav-link"
               style="color: white"
-              >New Blog</a
+              >Nueva Publicacion</a
             >
 
             {% endif %}
@@ -72,7 +72,7 @@
                   href="{% url 'logout' %}"
                   class="nav-item nav-link"
                   style="color: white"
-                  ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+                  ><i class="fa-solid fa-right-from-bracket"></i> Desconectarse</a
                 >
                 {% if request.user.is_superuser %}
                 <a href="{% url 'users-profile' %}" class="nav-item nav-link aTag" style="color: white"
@@ -95,7 +95,7 @@
                   href="{% url 'users-register' %}"
                   class="nav-item nav-link"
                   style="color: white"
-                  >Register</a
+                  >Registrarse</a
                 >
                 {% endif %}
               </div>

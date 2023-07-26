@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{% static 'blogapp/blog_update.css' %}">
 
 <form action="" method="POST" enctype="multipart/form-data">
-  <h1>Blog Update</h1>
+  <h1>Actualizar Publicacion</h1>
   {% csrf_token %} {{form.as_p}}
   <input type="submit" value="Update" />
 </form>

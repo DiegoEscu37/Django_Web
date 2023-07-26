@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" href="{% static 'blogapp/blog_delete.css' %}">
 <form action="" method="POST">
-  <p style="text-align:center;">Are You Sure delete {{blog}}!</p>
+  <p style="text-align:center;">Confirme la eliminacion de {{blog}}</p>
   {% csrf_token %}
   <input type="submit" value="Yes" />
   <a href="{% url 'list' %}">

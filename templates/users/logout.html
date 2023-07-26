@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Logout{% endblock title %}
+{% block title %}Desconectarse{% endblock title %}
 {% block content %}
 
 <style>
@@ -13,12 +13,12 @@
 </style>
     <div class="card messageCard" style="width: 18rem;">
         <div class="card-body">
-        <h5 class="card-title">You have been logged out</h5>
+        <h5 class="card-title">Sesion Cerrada</h5>
         <p class="card-text">
-            Thanks for your time, <br>
-            See you later...
+            Gracias por su tiempo, <br>
+            Hasta la proxima
         </p>
-        <br><hr><a href="{% url 'login' %}" class="btn btn-primary">Sign in again</a>
+        <br><hr><a href="{% url 'login' %}" class="btn btn-primary">Volver a conectarse</a>
         </div>
     </div>
 

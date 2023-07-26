@@ -89,12 +89,12 @@
 
     {% if blog.user == user %}
     <div class="buttons">
-      <a href="{% url 'update' blog.slug %}" class="updateButton">Update</a>
-      <a href="{% url 'delete' blog.slug %}" class="deleteButton">Delete</a>
+      <a href="{% url 'update' blog.slug %}" class="updateButton">Actualizar</a>
+      <a href="{% url 'delete' blog.slug %}" class="deleteButton">Borrar</a>
     </div>
     {% else %}
     <div className="blogWarning">
-      Only the author of this blog can make changes...
+      Solo el autor puede realizar cambios
     </div>
     {% endif %}
   </nav>
@@ -112,8 +112,8 @@
 </form>
 {% else %}
 <div class="commentsBody blogWarning">
-  Please, <a href="{% url 'login' %}" style="margin: 0 0.5rem"> login </a>to
-  comment on the post.
+  Por favor, <a href="{% url 'login' %}" style="margin: 0 0.5rem"> inicie sesion </a>para
+  comentar la publicacion.
 </div>
 {% endif %}
 <div class="commentsBody">
