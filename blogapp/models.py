@@ -1,78 +1,117 @@
 from django.db import models
-from django.urls import reverse
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
+from django.utils.text import slugify
 
-# Create your models here.
-CATEGORY = (
-    (None, 'Choose...'),
-    ('Technology','Technology'),
-    ('Software','Software'),
-    ('Business','Business'),
-    ('Fashion','Fashion'),
-    ('Lifestyle','Lifestyle'),
-    ('Travel','Travel'),
-    ('Food','Food'),
-)
+###########################
+##### Modelo Acerca de ####
+###########################
 
-STATUS =(
-    (None,'status'),
-    ('published','Finalizado'),
-    ('draft','Borrador'),
-)
-
-class Blog(models.Model):
-    title= models.CharField(max_length=250, unique=True, verbose_name='Título')
-    content= models.TextField()
-    image= models.ImageField(upload_to='blogapp/articulos/imagenes', null=True, blank=True, verbose_name='Imagen')
-    category= models.CharField(choices=CATEGORY, blank=True, max_length=200)
-    status= models.CharField(choices=STATUS, max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
-    publish_date=models.DateTimeField(auto_now_add=True)
-    last_update=models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE)
+class Acerca(models.Model):
+    descripcion = models.CharField(max_length=450, verbose_name='Descripción')
+    creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    actualizacion = models.DateTimeField(auto_now=True, verbose_name='Fecha de actualización')
 
     class Meta:
-        ordering = ['-date']
-
+        verbose_name='Acerca de'
+        verbose_name_plural='Acerca de nosotros'
+        ordering = ['-creacion']
+    
     def __str__(self):
-        return self.title
+        return self.descripcion
 
-    def get_absolute_url(self):
-        return reverse("article_detail", kwargs={"slug": self.slug})
+################################
+##### Modelo Redes Sociales ####
+################################
 
-    def get_comment_count(self):
-        comments = Comment.objects.all()
-        return comments.count()
-
-    def get_view_count(self):
-        return BlogView.objects.filter(blog=self).count()
-
-    def get_like_count(self):
-        return Favorite.objects.filter(blog=self).count()
-
-
-class Comment(models.Model):
-    blog = models.ForeignKey(Blog, related_name='comments', on_delete=models.CASCADE)
-    body = models.TextField()
-    date_added = models.DateTimeField(auto_now_add=True)
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
+class Red(models.Model):
+    nombre = models.CharField(max_length=150, verbose_name='Red Social')
+    url = models.URLField(max_length=300, null=True, blank=True, verbose_name='Enlace')
+    icono = models.CharField(max_length=150, null=True, blank=True, verbose_name='Icono')
+    creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    actualizacion = models.DateTimeField(auto_now=True, verbose_name='Fecha de actualización')
 
     class Meta:
-        ordering = ['date_added']
+        verbose_name='Red Social'
+        verbose_name_plural='Redes Sociales'
+        ordering = ['nombre']
+    
+    def __str__(self):
+        return self.nombre
 
 
-class Favorite(models.Model):
-    user = models.ForeignKey(User, related_name='favorites' , on_delete=models.CASCADE)
-    blog = models.ForeignKey(Blog, related_name='favorites' , on_delete=models.CASCADE)
+###########################
+##### Modelo Categoria ####
+###########################
+
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=200, unique=True, verbose_name='Nombre')
+    slug = models.SlugField()
+    activo = models.BooleanField(default=True, verbose_name='Activo')
+    creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    actualizacion = models.DateTimeField(auto_now=True, verbose_name='Fecha de actualización')
+
+    class Meta:
+        verbose_name='Categoría'
+        verbose_name_plural='Categorías'
+        ordering = ['nombre']
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nombre)
+        super(Categoria, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.blog.title
+        return self.nombre
 
-class BlogView(models.Model):
-    time_stamp = models.DateTimeField(auto_now=True)
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
-    blog= models.ForeignKey(Blog, on_delete=models.CASCADE)
+
+##########################
+##### Modelo Etiqueta ####
+##########################
+
+class Etiqueta(models.Model):
+    nombre = models.CharField(max_length=200, unique=True, verbose_name='Nombre')
+    activo = models.BooleanField(default=True, verbose_name='Activo')
+    creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    actualizacion = models.DateTimeField(auto_now=True, verbose_name='Fecha de actualización')
+
+    class Meta:
+        verbose_name='Etiqueta'
+        verbose_name_plural='Etiquetas'
+        ordering = ['nombre']
+    
+    def __str__(self):
+        return self.nombre
+    
+
+##########################
+#### Modelo Artículos ####
+##########################
+
+class Articulo(models.Model):
+    titulo = models.CharField(max_length=250, unique=True, verbose_name='Título')
+    slug = models.SlugField()
+    bajada = models.CharField(max_length=150, verbose_name='Bajada')
+    contenido = RichTextField(verbose_name='Contenido')
+    imagen = models.ImageField(upload_to='blog/articulos/imagenes', null=True, blank=True, verbose_name='Imagen')
+    publicado = models.BooleanField(default=False, verbose_name='Publicado')
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, related_name='get_articulos',null=True, blank=True, verbose_name='Categoría')
+    autor = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='get_articulos', null=True, blank=True, verbose_name='Autor')
+    etiquetas = models.ManyToManyField(Etiqueta, verbose_name='Etiquetas')
+    creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    actualizacion = models.DateTimeField(auto_now=True, verbose_name='Fecha de actualización')
+
+    class Meta:
+        verbose_name='Publicación'
+        verbose_name_plural='Publicaciones'
+        ordering = ['-creacion']
+    
+    def delete(self, using = None, keep_parents = False):
+        self.imagen.delete(self.imagen.name)
+        return super().delete()
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.titulo)
+        super(Articulo, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.blog.user
+        return self.titulo

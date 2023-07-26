@@ -1,26 +1,19 @@
 from django import forms
-from .models import Blog
-from .models import Comment
+from .models import Articulo
 
-class BlogForm(forms.ModelForm):
+
+class ArticuloForm(forms.ModelForm):
 
     class Meta:
-        model = Blog
-        fields= ["title","content","image","category"]
-        labels = {
-            'title': 'Titulo',
-            'content': 'Contenido',
-            'image': 'Imagen',
-            'category': 'Categoria',
-            #'status': 'Status',
-        }
+        model = Articulo
+        fields = ['titulo', 'bajada', 'contenido',
+                  'imagen', 'categoria', 'etiquetas']
 
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'bajada': forms.TextInput(attrs={'class': 'form-control'}),
+            'contenido': forms.Textarea(attrs={'class': 'form-control'}),
+            'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'categoria': forms.Select(attrs={'class': 'form-control'}),
+            'etiquetas': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
-
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ('body',)
