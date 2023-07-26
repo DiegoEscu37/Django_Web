@@ -6,17 +6,18 @@ class BlogForm(forms.ModelForm):
 
     class Meta:
         model = Blog
-        fields= ["title","content","image","category","status"]
+        fields= ["title","content","image","category"]
         labels = {
-            'title': 'Title',
-            'content': 'Content',
-            'image': 'Image',
-            'category': 'Category',
-            'status': 'Status',
+            'title': 'Titulo',
+            'content': 'Contenido',
+            'image': 'Imagen',
+            'category': 'Categoria',
+            #'status': 'Status',
         }
 
         widgets = {
-            'content': forms.Textarea(attrs={'cols':40, 'rows':10})
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
 class CommentForm(forms.ModelForm):

@@ -16,14 +16,14 @@ CATEGORY = (
 
 STATUS =(
     (None,'status'),
-    ('published','published'),
-    ('draft','draft'),
+    ('published','Finalizado'),
+    ('draft','Borrador'),
 )
 
 class Blog(models.Model):
-    title= models.CharField(max_length=100)
+    title= models.CharField(max_length=250, unique=True, verbose_name='Título')
     content= models.TextField()
-    image= models.URLField( default= "default.jpg")
+    image= models.ImageField(upload_to='blogapp/articulos/imagenes', null=True, blank=True, verbose_name='Imagen')
     category= models.CharField(choices=CATEGORY, blank=True, max_length=200)
     status= models.CharField(choices=STATUS, max_length=200)
     slug = models.SlugField(unique=True, blank=True)
